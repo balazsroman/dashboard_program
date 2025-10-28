@@ -1,5 +1,5 @@
 line-length = 120
 target-version = "py314"
 lint.select = ["ALL"]
-lint.ignore = ["ANN002", "ANN003", "ANN401", "BLE001", "D105", "D106", "D203", "D213", "D401", "EM101", "EM102", "TRY003"]
+lint.ignore = ["ANN002", "ANN003", "ANN401", "BLE001", "D105", "D106", "D203", "D213", "D401", "DTZ", "EM101", "EM102", "TRY003"]
 exclude = ["__init__.py"]
