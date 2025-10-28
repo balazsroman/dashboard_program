@@ -66,7 +66,7 @@ def read_bno_codes(
     """
     with csv_path.open("r") as file:
         reader: csv.DictReader = csv.DictReader(file)
-        return {row[code_column_name].strip(): row[name_column_name].strip() for row in reader}
+        return {row[code_column_name].strip(): row[name_column_name].strip().replace("ï", "ő") for row in reader}
 
 
 def read_ef_data(data_folder: Path = Path("data/ef"), *, drop_cols: bool = True) -> pd.DataFrame:
@@ -144,6 +144,43 @@ def add_age_bins(
         ordered=True,
     )
     return ef_df
+
+
+def get_error_df(
+    ef_df: pd.DataFrame,
+    error_column_name: str = "Elszámolt érték",
+    error_message_column_name: str = "Hibaüzenetek",
+) -> pd.DataFrame:
+    """Get the error DataFrame.
+
+    Args:
+        ef_df: Pandas DataFrame containing the data.
+        error_column_name: The name of the column containing the error.
+        error_message_column_name: The name of the column containing the error message.
+
+    Returns:
+        The pandas DataFrame with the error data.
+
+    """
+    errors: pd.DataFrame = ef_df[(ef_df[error_column_name] == 0) & (ef_df["Jelentett érték"] != 0)]
+    return errors.sort_values(by=error_message_column_name)
+
+
+def get_distribution(
+    ef_df: pd.DataFrame,
+    column_name: str,
+) -> dict[str, int]:
+    """Get the distribution of the given column.
+
+    Args:
+        ef_df: Pandas DataFrame containing the data.
+        column_name: The name of the column to get the distribution of.
+
+    Returns:
+        A dictionary containing the distribution of the given column.
+
+    """
+    return ef_df[column_name].value_counts().sort_index().to_dict()
 
 
 def get_report() -> pd.DataFrame:
