@@ -6,6 +6,7 @@ and for processing the data into a format suitable for the dashboard.
 """
 
 import csv
+import re
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -46,6 +47,29 @@ EF_COLS_TO_KEEP = [
     "Jogviszony ellenőrzési díj",
     "Kassza azonosító",
 ]
+
+
+def read_oeno_codes(
+    file_path: Path = Path("data/OENO.html"),
+) -> dict[str, str]:
+    """Read OENO codes from the given HTML file.
+
+    Args:
+        file_path: The path to the HTML file containing the OENO codes.
+
+    Returns:
+        A dictionary containing the OENO codes.
+
+    """
+    with file_path.open("r") as file:
+        html_content: str = file.read()
+        oeno_codes: dict[str, str] = {}
+        for match in re.findall(
+            r"(?P<kod>.{5})<\/a><\/td>\s+<td class=\"ujdonsag keret\">(?P<nev>.*?)<\/td>",
+            html_content,
+        ):
+            oeno_codes[match[0]] = match[1]
+        return oeno_codes
 
 
 def read_bno_codes(
