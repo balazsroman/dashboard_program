@@ -8,15 +8,16 @@ from dash_helpers import (
     display_age_distribution_chart,
     display_bno_distribution_chart,
     display_metrics,
+    display_oeno_distribution_chart,
     display_sidebar,
 )
-from report import get_error_df, get_report, read_bno_codes
+from report import get_error_df, get_report, read_bno_codes, read_oeno_codes
 
 locale.setlocale(locale.LC_ALL, "hu_HU.UTF-8")
 REPORT = get_report()
 ERROR_DF = get_error_df(REPORT)
 BNO_CODES = read_bno_codes()
-
+OENO_CODES = read_oeno_codes()
 PAGE_TITLE = "Dashboard Program"
 PAGE_ICON = "🏥"
 
@@ -31,5 +32,7 @@ display_age_distribution_chart(REPORT)
 st.markdown("---")
 display_bno_distribution_chart(REPORT, BNO_CODES)
 st.markdown("---")
-st.header("Hibás rekordok")
-st.dataframe(ERROR_DF, use_container_width=True, hide_index=True)
+display_oeno_distribution_chart(REPORT, OENO_CODES)
+# st.markdown("---")
+# st.header("Hibás rekordok")
+# st.dataframe(ERROR_DF, use_container_width=True, hide_index=True)
