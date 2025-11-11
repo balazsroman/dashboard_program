@@ -13,7 +13,14 @@ from dash_helpers import (
 )
 from report import get_error_df, get_report, read_bno_codes, read_oeno_codes
 
-locale.setlocale(locale.LC_ALL, "hu_HU.UTF-8")
+try:
+    locale.setlocale(locale.LC_ALL, "hu_HU.UTF-8")
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_ALL, "hu_HU")
+    except locale.Error:
+        locale.setlocale(locale.LC_ALL, "")
+
 REPORT = get_report()
 ERROR_DF = get_error_df(REPORT)
 BNO_CODES = read_bno_codes()
@@ -33,6 +40,6 @@ st.markdown("---")
 display_bno_distribution_chart(REPORT, BNO_CODES)
 st.markdown("---")
 display_oeno_distribution_chart(REPORT, OENO_CODES)
-# st.markdown("---")
-# st.header("Hibás rekordok")
-# st.dataframe(ERROR_DF, use_container_width=True, hide_index=True)
+st.markdown("---")
+st.header("Hibás rekordok")
+st.dataframe(ERROR_DF, use_container_width=True, hide_index=True)
